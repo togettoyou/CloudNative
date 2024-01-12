@@ -46,7 +46,7 @@ sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables ne
 
 yum install -y yum-utils device-mapper-persistent-data lvm2
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-yum install containerd -y
+yum install containerd.io-1.6.26 -y
 
 containerd config default > /etc/containerd/config.toml
 
