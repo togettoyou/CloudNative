@@ -4,6 +4,12 @@
 curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/install/install.sh | bash
 ```
 
+国内代理：
+
+```shell
+curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/install/install.sh | bash
+```
+
 使用 kubeadm 创建集群：
 
 ```shell
