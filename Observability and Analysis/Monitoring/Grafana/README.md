@@ -18,7 +18,7 @@ wget https://github.com/grafana/helm-charts/releases/download/grafana-7.2.1/graf
 
 ```shell
 kubectl create ns monitoring
-helm install grafana grafana/grafana -f values.yaml grafana-7.2.1.tgz -n monitoring
+helm install grafana grafana-7.2.1.tgz -f values.yaml -n monitoring
 ```
 
 其中 `values.yaml` 配置文件：
@@ -27,7 +27,7 @@ helm install grafana grafana/grafana -f values.yaml grafana-7.2.1.tgz -n monitor
 service:
   enabled: true
   type: NodePort
-  nodePort: 33080
+  nodePort: 30080
 persistence:
   type: pvc
   enabled: true
