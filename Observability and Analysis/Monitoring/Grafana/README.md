@@ -31,6 +31,39 @@ service:
 persistence:
   type: pvc
   enabled: true
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
 ```
 
 配置参考：https://github.com/grafana/helm-charts/tree/grafana-7.2.1/charts/grafana
+
+### 附录
+
+LocalPV 方式：
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv-grafana-node1
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/localpv/grafana
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - node1
+```
