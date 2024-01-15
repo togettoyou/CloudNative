@@ -41,6 +41,12 @@ persistence:
 
 ### 附录
 
+查看 admin 密码：
+
+```shell
+kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
 LocalPV 方式：
 
 ```yaml
