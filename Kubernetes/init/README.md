@@ -24,14 +24,6 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
 
 ### 附录
 
-containerd 国内代理（以腾讯云代理为例）：
-
-```shell
-[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
-        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
-           endpoint = ["https://mirror.ccs.tencentyun.com"]
-```
-
 安装 Pod 网络附加组件：
 
 - calico
@@ -45,3 +37,17 @@ containerd 国内代理（以腾讯云代理为例）：
     ```shell
     kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.24.0/kube-flannel.yml
     ```
+
+安装 Helm ：
+
+```shell
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+containerd 设置国内代理（以腾讯云代理为例）：
+
+```shell
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+           endpoint = ["https://mirror.ccs.tencentyun.com"]
+```
