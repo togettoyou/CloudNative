@@ -3,13 +3,13 @@
 所有节点执行：
 
 ```shell
-curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/install/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/init/install.sh | bash
 ```
 
 也可使用国内代理：
 
 ```shell
-curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/install/install.sh | bash
+curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/init/install.sh | bash
 ```
 
 ### 安装
