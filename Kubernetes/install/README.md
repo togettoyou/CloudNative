@@ -1,14 +1,18 @@
+### 部署
+
 所有节点执行：
 
 ```shell
 curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/install/install.sh | bash
 ```
 
-国内代理：
+也可使用国内代理：
 
 ```shell
 curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/install/install.sh | bash
 ```
+
+### 安装
 
 使用 kubeadm 创建集群：
 
@@ -17,3 +21,27 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
 ```
 
 参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+### 附录
+
+containerd 国内代理（以腾讯云代理为例）：
+
+```shell
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+           endpoint = ["https://mirror.ccs.tencentyun.com"]
+```
+
+安装 Pod 网络附加组件：
+
+- calico
+
+    ```shell
+    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
+    ```
+
+- flannel
+
+    ```shell
+    kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.24.0/kube-flannel.yml
+    ```
