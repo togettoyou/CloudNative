@@ -27,4 +27,6 @@ helm install prometheus prometheus-25.8.2.tgz -f values.yaml -n monitoring
 
 ```
 
+配置参考：https://github.com/prometheus-community/helm-charts/tree/prometheus-25.8.2/charts/prometheus
+
 ### 附录
