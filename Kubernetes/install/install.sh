@@ -31,7 +31,6 @@ net.bridge.bridge-nf-call-ip6tables = 1
 net.ipv4.ip_forward                 = 1
 EOF
 
-# 保证生效
 sudo sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g' /etc/sysctl.conf
 
 sudo sysctl --system
@@ -55,6 +54,7 @@ sudo sed -i 's|sandbox_image = ".*"|sandbox_image = "registry.aliyuncs.com/googl
 
 systemctl enable containerd
 systemctl start containerd
+systemctl status containerd
 
 
 #################### 部署k8s工具 ####################
@@ -73,3 +73,5 @@ yum install -y kubelet-1.27.2 kubeadm-1.27.2 kubectl-1.27.2
 
 crictl config runtime-endpoint unix:///run/containerd/containerd.sock
 crictl config image-endpoint unix:///run/containerd/containerd.sock
+
+crictl ps
