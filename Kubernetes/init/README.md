@@ -46,7 +46,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 containerd 设置国内代理（以腾讯云代理为例）：
 
-```shell
+```toml
 [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
         [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
            endpoint = ["https://mirror.ccs.tencentyun.com"]
