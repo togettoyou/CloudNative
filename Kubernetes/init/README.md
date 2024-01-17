@@ -44,6 +44,12 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 
+安装 Kubernetes Metrics Server ：
+
+```shell
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
+```
+
 containerd 设置国内代理（以腾讯云代理为例）：
 
 ```toml
