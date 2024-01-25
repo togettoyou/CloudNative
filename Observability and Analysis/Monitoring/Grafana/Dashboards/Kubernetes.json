@@ -4190,24 +4190,6 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "prometheus",
-          "value": "a9aef0f1-d9a8-47aa-9241-a5bf3828f46a"
-        },
-        "hide": 0,
-        "includeAll": false,
-        "label": "数据源",
-        "multi": false,
-        "name": "datasource",
-        "options": [],
-        "query": "prometheus",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "type": "datasource"
-      },
-      {
         "current": {},
         "datasource": {
           "type": "prometheus",
