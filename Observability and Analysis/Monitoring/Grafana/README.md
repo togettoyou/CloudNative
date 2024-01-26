@@ -41,35 +41,35 @@ persistence:
 
 ### 附录
 
-查看 admin 密码：
+1. 查看 admin 密码：
 
-```shell
-kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
-```
+    ```shell
+    kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+    ```
 
-LocalPV 方式：
+2. LocalPV 参考：
 
-```yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: local-pv-grafana-node1
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /mnt/localpv/grafana
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - node1
-```
+   ```yaml
+   apiVersion: v1
+   kind: PersistentVolume
+   metadata:
+     name: local-pv-grafana-node1
+   spec:
+     capacity:
+       storage: 10Gi
+     volumeMode: Filesystem
+     accessModes:
+       - ReadWriteOnce
+     persistentVolumeReclaimPolicy: Retain
+     storageClassName: local-storage
+     local:
+       path: /mnt/localpv/grafana
+     nodeAffinity:
+       required:
+         nodeSelectorTerms:
+           - matchExpressions:
+               - key: kubernetes.io/hostname
+                 operator: In
+                 values:
+                   - node1
+   ```
