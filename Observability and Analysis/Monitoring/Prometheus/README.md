@@ -45,29 +45,36 @@ prometheus-pushgateway:
 
 ### 附录
 
-LocalPV 方式：
+1. 国内无法拉取 `registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.10.1` 镜像，可以在节点执行：
 
-```yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: local-pv-prometheus-node1
-spec:
-  capacity:
-    storage: 8Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /mnt/localpv/prometheus
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - node1
-```
+   ```shell
+   crictl pull docker.io/togettoyou/registry.k8s.io.kube-state-metrics.kube-state-metrics:v2.10.1
+   ctr -n k8s.io i tag docker.io/togettoyou/registry.k8s.io.kube-state-metrics.kube-state-metrics:v2.10.1 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.10.1
+   ```
+
+2. LocalPV 参考：
+
+    ```yaml
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: local-pv-prometheus-node1
+    spec:
+      capacity:
+        storage: 8Gi
+      volumeMode: Filesystem
+      accessModes:
+        - ReadWriteOnce
+      persistentVolumeReclaimPolicy: Retain
+      storageClassName: local-storage
+      local:
+        path: /mnt/localpv/prometheus
+      nodeAffinity:
+        required:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - node1
+    ```
