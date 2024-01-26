@@ -24,43 +24,51 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
 
 ### 附录
 
-安装 Pod 网络附加组件：
+1. 安装 Pod 网络附加组件：
 
-- calico
+    - calico
 
-    ```shell
-    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
-    ```
+        ```shell
+        kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
+        ```
 
-- flannel
+    - flannel
 
-    ```shell
-    kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.24.0/kube-flannel.yml
-    ```
+        ```shell
+        kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.24.0/kube-flannel.yml
+        ```
 
-安装 Helm ：
+2. 安装 Helm ：
 
-```shell
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-```
+   ```shell
+   curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+   ```
 
-安装 Kubernetes Metrics Server ：
+3. 安装 Kubernetes Metrics Server ：
 
-```shell
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
-```
+   ```shell
+   kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
+   ```
 
-国内无法拉取 `registry.k8s.io/metrics-server/metrics-server:v0.6.4` 镜像，可以在节点执行：
+   国内无法拉取 `registry.k8s.io/metrics-server/metrics-server:v0.6.4` 镜像，可以在节点执行：
 
-```shell
-crictl pull docker.io/togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4
-ctr -n k8s.io i tag docker.io/togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
-```
+   ```shell
+   crictl pull docker.io/togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4
+   ctr -n k8s.io i tag docker.io/togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
+   ```
 
-containerd 设置国内代理（以腾讯云代理为例）：
+   若 metrics-server 服务一直无法 ready ，需要编辑 Deployment 增加 `--kubelet-insecure-tls` 运行参数
 
-```toml
-[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
-        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
-           endpoint = ["https://mirror.ccs.tencentyun.com"]
-```
+   ```yaml
+         containers:
+           - args:
+               - --kubelet-insecure-tls
+   ```
+
+4. containerd 设置国内代理（以腾讯云代理为例）：
+
+   ```toml
+   [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+           [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+              endpoint = ["https://mirror.ccs.tencentyun.com"]
+   ```
