@@ -50,6 +50,13 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
 ```
 
+国内无法拉取 `registry.k8s.io/metrics-server/metrics-server:v0.6.4` 镜像，可以在节点执行：
+
+```shell
+ctr image pull togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4
+ctr -n k8s.io i tag togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
+```
+
 containerd 设置国内代理（以腾讯云代理为例）：
 
 ```toml
