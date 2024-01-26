@@ -35,6 +35,9 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 10Gi
+grafana.ini:
+  metrics:
+    enabled: false
 ```
 
 配置参考：https://github.com/grafana/helm-charts/tree/grafana-7.2.1/charts/grafana
