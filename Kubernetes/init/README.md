@@ -72,3 +72,14 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
            [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
               endpoint = ["https://mirror.ccs.tencentyun.com"]
    ```
+
+5. 启用 kubectl 自动补全功能
+
+   ```shell
+   yum install bash-completion
+   echo 'source /usr/share/bash-completion/bash_completion' >>~/.bashrc
+   echo 'source <(kubectl completion bash)' >>~/.bashrc
+   echo 'alias k=kubectl' >>~/.bashrc
+   echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
+   source ~/.bashrc
+   ```
