@@ -71,6 +71,8 @@ EOF
 
 yum install -y kubelet-1.27.2 kubeadm-1.27.2 kubectl-1.27.2
 
+systemctl enable kubelet
+
 crictl config runtime-endpoint unix:///run/containerd/containerd.sock
 crictl config image-endpoint unix:///run/containerd/containerd.sock
 
