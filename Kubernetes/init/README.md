@@ -53,8 +53,7 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
    国内无法拉取 `registry.k8s.io/metrics-server/metrics-server:v0.6.4` 镜像，可以在节点执行：
 
    ```shell
-   crictl pull docker.io/togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4
-   ctr -n k8s.io i tag docker.io/togettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
+   ctr -n k8s.io image pull docker.io/hubmirrorbytogettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 && ctr -n k8s.io image tag docker.io/hubmirrorbytogettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
    ```
 
    若 metrics-server 服务一直无法 ready ，需要编辑 Deployment 增加 `--kubelet-insecure-tls` 运行参数
