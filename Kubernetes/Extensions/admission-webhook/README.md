@@ -4,7 +4,7 @@
 
 # Kubernetes API Server 必须通过 HTTPS 访问 Webhook Server
 
-#### 方案一：自签证书
+### 方案一：自签证书
 
 自行生成 KEY（私钥）和 CSR（Certificate Signing Request，证书签名请求），使用自签名根证书作为 CA（证书颁发机构）颁发 CRT
 （Certificate 的缩写，即证书）
@@ -45,12 +45,12 @@ webhooks:
     sideEffects: None
 ```
 
-> - 当使用到 `clientConfig.service` 时，服务器证书才必须对 `<svc_name>.<svc_namespace>.svc`
-    有效，即生成证书时需指定 `-subj "/CN=simple-webhook-server.webhook-system.svc"`
+> 当使用到 `clientConfig.service` 时，服务器证书才必须对 `<svc_name>.<svc_namespace>.svc`
+> 有效，即生成证书时需指定 `-subj "/CN=simple-webhook-server.webhook-system.svc"`
 >
-> - 若使用 `clientConfig.url` ，则不做要求
+> 若使用 `clientConfig.url` ，则不做要求
 
-#### 方案二：利用 [cert-manager](https://github.com/cert-manager/cert-manager) 自动颁发证书
+### 方案二：利用 [cert-manager](https://github.com/cert-manager/cert-manager) 自动颁发证书
 
 ```yaml
 apiVersion: cert-manager.io/v1
