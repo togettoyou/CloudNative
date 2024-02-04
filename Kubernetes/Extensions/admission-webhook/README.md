@@ -86,8 +86,8 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: simple-validating-webhook-configuration
-annotations:
-  cert-manager.io/inject-ca-from: webhook-system/simple-webhook-server-cert
+  annotations:
+    cert-manager.io/inject-ca-from: webhook-system/simple-webhook-server-cert
 webhooks:
   - name: simple-webhook-server.webhook-system
     clientConfig:
