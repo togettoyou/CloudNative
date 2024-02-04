@@ -59,7 +59,7 @@
 
 不论何种方式生成的证书，其中 `server.crt` 和 `server.key` 将用于 Webhook Server 启动 HTTPS
 服务，`$(cat ca.crt | base64 | tr -d '\n')` 则作为创建 `MutatingWebhookConfiguration` 或 `ValidatingWebhookConfiguration`
-资源时的 `caBundle` 字段值。例如：
+资源时的 `caBundle` 字段值，该 CA 证书可用于 Kubernetes API Server 验证对 Webhook Server 的请求是否安全。例如：
 
 ```yaml
 apiVersion: admissionregistration.k8s.io/v1
@@ -84,6 +84,6 @@ webhooks:
 ```
 
 - 当使用 `clientConfig.service` 时，服务器证书必须对 `<svc_name>.<svc_namespace>.svc`
-  有效，即生成证书时指定 `-subj "/CN=simple-webhook-server.webhook-system.svc"` 。
+  有效，即生成证书时指定 `-subj "/CN=simple-webhook-server.webhook-system.svc"`
 
-- 若使用 `clientConfig.url` ，则不做要求。
+- 若使用 `clientConfig.url` ，则不做要求
