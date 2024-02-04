@@ -26,6 +26,8 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
+
 	http.HandleFunc("/validating", func(w http.ResponseWriter, r *http.Request) {
 		admit.Serve(w, r, admit.NewAdmitHandler(func(review v1.AdmissionReview) *v1.AdmissionResponse {
 			req := review.Request
