@@ -43,6 +43,7 @@ webhooks:
         resources: [ "pods" ]
     admissionReviewVersions: [ "v1", "v1beta1" ]
     sideEffects: None
+    failurePolicy: Ignore
 ```
 
 > 当使用到 `clientConfig.service` 时，服务器证书才必须对 `<svc_name>.<svc_namespace>.svc`
@@ -102,4 +103,5 @@ webhooks:
         resources: [ "pods" ]
     admissionReviewVersions: [ "v1", "v1beta1" ]
     sideEffects: None
+    failurePolicy: Ignore
 ```
