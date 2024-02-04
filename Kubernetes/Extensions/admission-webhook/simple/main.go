@@ -39,7 +39,7 @@ func main() {
 					return &v1.AdmissionResponse{
 						Allowed: false,
 						Result: &metav1.Status{
-							Message: err.Error(),
+							Message: msg,
 						},
 					}
 				}
@@ -60,25 +60,36 @@ func main() {
 	http.HandleFunc("/mutating", func(w http.ResponseWriter, r *http.Request) {
 		admit.Serve(w, r, admit.NewAdmitHandler(func(review v1.AdmissionReview) *v1.AdmissionResponse {
 			req := review.Request
-			switch req.Kind.Kind {
-			case "Pod":
-				var pod corev1.Pod
-				if err := json.Unmarshal(req.Object.Raw, &pod); err != nil {
-					msg := fmt.Sprintf("could not decode pod: %v", err)
-					klog.Error(msg)
-					http.Error(w, msg, http.StatusInternalServerError)
-					return &v1.AdmissionResponse{
-						Allowed: false,
-						Result: &metav1.Status{
-							Message: err.Error(),
-						},
-					}
+			if req.Kind.Kind != "Pod" {
+				return &v1.AdmissionResponse{
+					Allowed: true,
+				}
+			}
+
+			// 为pod添加simple-app标签
+			patchBytes, patchType, err := admit.PatchTypeJSONPatch(admit.PatchOperation{
+				Op:    "add",
+				Path:  "/metadata/labels/simple-app",
+				Value: []byte(`"by mutating"`),
+			})
+			if err != nil {
+				msg := fmt.Sprintf("marshall jsonpatch: %v", err)
+				klog.Error(msg)
+				http.Error(w, msg, http.StatusInternalServerError)
+				return &v1.AdmissionResponse{
+					Allowed: false,
+					Result: &metav1.Status{
+						Message: msg,
+					},
 				}
 			}
 			return &v1.AdmissionResponse{
-				Allowed: true,
+				Allowed:   true,
+				Patch:     patchBytes,
+				PatchType: patchType,
 			}
 		}))
 	})
+
 	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, nil))
 }

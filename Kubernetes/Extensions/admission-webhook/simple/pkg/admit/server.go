@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	admissionv1 "k8s.io/api/admission/v1"
 	v1 "k8s.io/api/admission/v1"
 	"k8s.io/api/admission/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -20,6 +21,21 @@ type v1Func func(v1.AdmissionReview) *v1.AdmissionResponse
 type handler struct {
 	v1beta1 v1beta1Func
 	v1      v1Func
+}
+
+type PatchOperation struct {
+	Op    string      `json:"op"`
+	Path  string      `json:"path"`
+	Value interface{} `json:"value,omitempty"`
+}
+
+func PatchTypeJSONPatch(patch ...PatchOperation) ([]byte, *admissionv1.PatchType, error) {
+	patchBytes, err := json.Marshal(&patch)
+	if err != nil {
+		return nil, nil, err
+	}
+	pt := admissionv1.PatchTypeJSONPatch
+	return patchBytes, &pt, nil
 }
 
 // NewAdmitHandler AdmissionReview compatible with both v1 and v1beta1 versions
@@ -95,7 +111,7 @@ func Serve(w http.ResponseWriter, r *http.Request, h handler) {
 	if contentType != "application/json" {
 		msg := fmt.Sprintf("contentType=%s, expect application/json", contentType)
 		klog.Error(msg)
-		http.Error(w, msg, http.StatusBadRequest)
+		http.Error(w, msg, http.StatusUnsupportedMediaType)
 		return
 	}
 
