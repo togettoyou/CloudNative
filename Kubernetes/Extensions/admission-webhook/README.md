@@ -12,7 +12,7 @@
 ```shell
 # 生成 KEY 和 CSR ，并确保 CN（Common Name）匹配 Webhook Server 的完全限定域名（FQDN），保存为 tls.csr 和 tls.key
 openssl req -new -newkey rsa:2048 -nodes -out tls.csr -keyout tls.key -subj "/CN=simple-webhook-server.webhook-system.svc"
-   
+
 # 生成 10 年有效期的自签名根证书作为 CA ，保存为 ca.crt 和 ca.key
 openssl req -new -x509 -days 3650 -nodes -out ca.crt -keyout ca.key -subj "/CN=Admission Controller CA"
 # 使用 CA 和 CSR 签发 10 年有效期的 CRT 证书，保存为 tls.crt
@@ -29,7 +29,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: simple-validating-webhook-configuration
 webhooks:
-  - name: simple-webhook-server.webhook-system
+  - name: simple-webhook-server.webhook-system.io
     clientConfig:
       service:
         name: simple-webhook-server
@@ -89,7 +89,7 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: webhook-system/simple-webhook-server-cert
 webhooks:
-  - name: simple-webhook-server.webhook-system
+  - name: simple-webhook-server.webhook-system.io
     clientConfig:
       service:
         name: simple-webhook-server
