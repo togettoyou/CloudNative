@@ -17,7 +17,6 @@
    ```
 
    ```yaml
-   # 创建 CSR 资源
    apiVersion: certificates.k8s.io/v1
    kind: CertificateSigningRequest
    metadata:
