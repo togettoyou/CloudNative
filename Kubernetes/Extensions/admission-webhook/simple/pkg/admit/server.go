@@ -22,7 +22,7 @@ type handler struct {
 	v1      v1Func
 }
 
-// NewAdmitHandler 同时兼容 v1 和 v1beta1 版本的 AdmissionReview
+// NewAdmitHandler AdmissionReview compatible with both v1 and v1beta1 versions
 func NewAdmitHandler(f v1Func) handler {
 	return handler{
 		v1beta1: delegateV1beta1AdmitToV1(f),
@@ -76,7 +76,7 @@ func convertAdmissionResponseToV1beta1(r *v1.AdmissionResponse) *v1beta1.Admissi
 }
 
 func Serve(w http.ResponseWriter, r *http.Request, h handler) {
-	// 1. 获取 body
+	// 1. Get body
 	var body []byte
 	if r.Body != nil {
 		if data, err := io.ReadAll(r.Body); err == nil {
@@ -90,7 +90,7 @@ func Serve(w http.ResponseWriter, r *http.Request, h handler) {
 		return
 	}
 
-	// 2. 校验 content type
+	// 2. Validate content type
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {
 		msg := fmt.Sprintf("contentType=%s, expect application/json", contentType)
@@ -99,7 +99,7 @@ func Serve(w http.ResponseWriter, r *http.Request, h handler) {
 		return
 	}
 
-	// 3. 解析 body 为 k8s 资源对象
+	// 3. Parse body into a Kubernetes resource object
 	deserializer := serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
 	obj, gvk, err := deserializer.Decode(body, nil, nil)
 	if err != nil {

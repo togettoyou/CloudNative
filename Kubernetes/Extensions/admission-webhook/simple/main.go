@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"net/http"
+	"simple/pkg/admit"
+
 	v1 "k8s.io/api/admission/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog/v2"
-	"net/http"
-	"simple/pkg/admit"
 )
 
 var (
@@ -36,8 +37,17 @@ func main() {
 					klog.Error(msg)
 					http.Error(w, msg, http.StatusInternalServerError)
 					return &v1.AdmissionResponse{
+						Allowed: false,
 						Result: &metav1.Status{
 							Message: err.Error(),
+						},
+					}
+				}
+				if _, ok := pod.Labels["app"]; !ok {
+					return &v1.AdmissionResponse{
+						Allowed: false,
+						Result: &metav1.Status{
+							Reason: "pod没有app标签",
 						},
 					}
 				}
@@ -58,6 +68,7 @@ func main() {
 					klog.Error(msg)
 					http.Error(w, msg, http.StatusInternalServerError)
 					return &v1.AdmissionResponse{
+						Allowed: false,
 						Result: &metav1.Status{
 							Message: err.Error(),
 						},
