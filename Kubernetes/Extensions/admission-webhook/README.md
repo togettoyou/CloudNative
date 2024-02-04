@@ -52,14 +52,6 @@ webhooks:
 
 ### 方案二：利用 [cert-manager](https://github.com/cert-manager/cert-manager) 自动颁发证书
 
-安装 cert-manager ：
-
-```shell
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.1/cert-manager.yaml
-```
-
-创建 Certificate ：
-
 ```yaml
 apiVersion: cert-manager.io/v1
 kind: Issuer
