@@ -33,3 +33,7 @@ https://github.com/kubernetes-sigs/apiserver-builder-alpha/issues/541
 
 apiserver-runtime 是不稳定的，目前对于聚合 API
 的开发，社区并没有一个较流行的库支持（类似 [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) 那样）
+
+# [k8s.io/apiserver](https://github.com/kubernetes/apiserver)
+
+apiserver-runtime 实际也是基于 kube-apiserver 组件的 k8s.io/apiserver 库提供扩展。建议直接学习使用该库，可以保证最大的灵活定制，不过难度也相应较大
