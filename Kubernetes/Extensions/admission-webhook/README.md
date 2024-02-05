@@ -9,38 +9,17 @@
 自行生成 KEY（私钥）和 CSR（Certificate Signing Request，证书签名请求），使用自签名根证书作为 CA（证书颁发机构）颁发 CRT
 （Certificate 的缩写，即证书）
 
-`openssl.cnf` ：
-
-```
-[ req ]
-default_bits       = 2048
-prompt             = no
-default_md         = sha256
-req_extensions     = req_ext
-distinguished_name = dn
-
-[ dn ]
-C="US"
-ST="California"
-L="San Francisco"
-O="My Organization"
+```shell
+# 确保 CN （逐步淘汰） 和 SANs 匹配 Webhook Server 的完全限定域名（FQDN）
 CN="simple-webhook-server.webhook-system.svc"
 
-[ req_ext ]
-subjectAltName = @alt_names
-
-[ alt_names ]
-DNS.1 = simple-webhook-server.webhook-system.svc
-```
-
-```shell
-# 生成 KEY 和 CSR ，并确保 CN （逐步淘汰） 和 SANs 匹配 Webhook Server 的完全限定域名（FQDN），保存为 tls.csr 和 tls.key
-openssl req -new -nodes -newkey rsa:2048 -keyout tls.key -out tls.csr -config openssl.cnf
+# 生成 KEY 和 CSR ，保存为 tls.csr 和 tls.key
+openssl req -newkey rsa:2048 -nodes -keyout tls.key -out tls.csr -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=${CN}"
 
 # 生成 10 年有效期的自签名根证书作为 CA ，保存为 ca.crt 和 ca.key
-openssl req -new -x509 -days 3650 -nodes -out ca.crt -keyout ca.key -subj "/CN=Admission Controller CA"
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA"
 # 使用 CA 和 CSR 签发 10 年有效期的 CRT 证书，保存为 tls.crt
-openssl x509 -req -in tls.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out tls.crt -days 3650
+openssl x509 -req -days 3650 -in tls.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out tls.crt -extfile <(printf "subjectAltName=DNS:${CN}")
 ```
 
 其中 `tls.crt` 和 `tls.key` 将用于 Webhook Server 启动 HTTPS 服务，`$(cat ca.crt | base64 | tr -d '\n')`
