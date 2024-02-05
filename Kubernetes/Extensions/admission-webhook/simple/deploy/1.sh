@@ -7,7 +7,7 @@ CN="simple-webhook-server.webhook-system.svc"
 openssl req -newkey rsa:2048 -nodes -keyout tls.key -out tls.csr -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=${CN}"
 
 # 生成 10 年有效期的自签名根证书作为 CA ，保存为 ca.crt 和 ca.key
-openssl req -new -x509 -days 3650 -key ca.key -out ca.crt -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA"
+openssl req -new -x509 -days 3650 -nodes -out ca.crt -keyout ca.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA"
 # 使用 CA 和 CSR 签发 10 年有效期的 CRT 证书，保存为 tls.crt
 openssl x509 -req -days 3650 -in tls.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out tls.crt -extfile <(printf "subjectAltName=DNS:${CN}")
 
