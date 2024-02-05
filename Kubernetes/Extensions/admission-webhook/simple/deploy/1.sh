@@ -1,7 +1,32 @@
 #!/bin/bash
 
+CN="simple-webhook-server.webhook-system.svc"
+
+cat > openssl.cnf <<EOF
+[ req ]
+default_bits       = 2048
+prompt             = no
+default_md         = sha256
+req_extensions     = req_ext
+distinguished_name = dn
+
+[ dn ]
+C="US"
+ST="California"
+L="San Francisco"
+O="My Organization"
+CN="${CN}"
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = ${CN}
+EOF
+
+
 # 生成 KEY 和 CSR ，并确保 CN （逐步淘汰） 和 SANs 匹配 Webhook Server 的完全限定域名（FQDN），保存为 tls.csr 和 tls.key
-openssl req -new -newkey rsa:2048 -nodes -out tls.csr -keyout tls.key -subj "/CN=simple-webhook-server.webhook-system.svc" -addext "subjectAltName=DNS:simple-webhook-server.webhook-system.svc"
+openssl req -new -nodes -newkey rsa:2048 -keyout tls.key -out tls.csr -config openssl.cnf
 
 # 生成 10 年有效期的自签名根证书作为 CA ，保存为 ca.crt 和 ca.key
 openssl req -new -x509 -days 3650 -nodes -out ca.crt -keyout ca.key -subj "/CN=Admission Controller CA"
