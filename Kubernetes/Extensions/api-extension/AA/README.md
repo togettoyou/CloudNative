@@ -24,3 +24,12 @@ spec:
     name: <拓展 Apiserver 服务的名称>
   caBundle: <PEM 编码的 CA 证书，用于对 Webhook 服务器的证书签名>
 ```
+
+# [apiserver-runtime](https://github.com/kubernetes-sigs/apiserver-runtime) （Alpha）
+
+apiserver-runtime 是专门开发 Kubernetes 聚合 API 的 SDK 框架
+
+https://github.com/kubernetes-sigs/apiserver-builder-alpha/issues/541
+
+apiserver-runtime 是不稳定的，目前对于聚合 API
+的开发，社区并没有一个较流行的库支持（类似 [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) 那样）
