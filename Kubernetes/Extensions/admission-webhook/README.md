@@ -44,7 +44,7 @@ webhooks:
         apiGroups: [ "" ]
         apiVersions: [ "v1" ]
         resources: [ "pods" ]
-    admissionReviewVersions: [ "v1", "v1beta1" ]
+    admissionReviewVersions: [ "v1beta1", "v1" ]
     sideEffects: None
     failurePolicy: Ignore
 ```
@@ -103,7 +103,7 @@ webhooks:
         apiGroups: [ "" ]
         apiVersions: [ "v1" ]
         resources: [ "pods" ]
-    admissionReviewVersions: [ "v1", "v1beta1" ]
+    admissionReviewVersions: [ "v1beta1", "v1" ]
     sideEffects: None
     failurePolicy: Ignore
 ```
