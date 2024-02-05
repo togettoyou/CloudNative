@@ -21,8 +21,8 @@ etcd 中，创建 CRD 无需编码，但往往需要结合自定义 Controller �
 
 ### 方案二：Aggregated APIServer （AA）API 聚合服务
 
-利用 kube-apiserver 的第一个服务 AggregatorServer ，kube-apiserver 发现收到自定义 APIService 的请求时，会转发到对应的自行编写和部署的
-扩展 API 服务器（Extension API Server），相比方案一，有更强扩展性：
+利用 kube-apiserver 的第一个服务 AggregatorServer ，kube-apiserver 发现收到自定义 APIService 的请求时，会转发到对应的自行编写和部署的扩展
+API 服务器（Extension API Server），相比方案一，有更强扩展性：
 
 - 可以采用除了 etcd 之外，其它不同的存储
 
