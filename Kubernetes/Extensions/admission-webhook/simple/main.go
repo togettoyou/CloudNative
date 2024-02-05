@@ -29,7 +29,7 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/validating", func(w http.ResponseWriter, r *http.Request) {
-		admit.Serve(w, r, admit.NewAdmitHandler(func(review v1.AdmissionReview) *v1.AdmissionResponse {
+		admit.Serve(w, r, func(review admit.AdmissionReview) *v1.AdmissionResponse {
 			req := review.Request
 			switch req.Kind.Kind {
 			case "Pod":
@@ -49,7 +49,7 @@ func main() {
 					return &v1.AdmissionResponse{
 						Allowed: false,
 						Result: &metav1.Status{
-							Reason: "pod没有app标签",
+							Reason: "Pod does not have an app label",
 						},
 					}
 				}
@@ -57,10 +57,10 @@ func main() {
 			return &v1.AdmissionResponse{
 				Allowed: true,
 			}
-		}))
+		})
 	})
 	http.HandleFunc("/mutating", func(w http.ResponseWriter, r *http.Request) {
-		admit.Serve(w, r, admit.NewAdmitHandler(func(review v1.AdmissionReview) *v1.AdmissionResponse {
+		admit.Serve(w, r, func(review admit.AdmissionReview) *v1.AdmissionResponse {
 			req := review.Request
 			if req.Kind.Kind != "Pod" {
 				return &v1.AdmissionResponse{
@@ -72,7 +72,7 @@ func main() {
 			patchBytes, patchType, err := admit.PatchTypeJSONPatch(admit.PatchOperation{
 				Op:    "add",
 				Path:  "/metadata/labels/simple-app",
-				Value: []byte(`"by mutating"`),
+				Value: "mutating",
 			})
 			if err != nil {
 				msg := fmt.Sprintf("marshall jsonpatch: %v", err)
@@ -90,7 +90,7 @@ func main() {
 				Patch:     patchBytes,
 				PatchType: patchType,
 			}
-		}))
+		})
 	})
 
 	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, nil))
