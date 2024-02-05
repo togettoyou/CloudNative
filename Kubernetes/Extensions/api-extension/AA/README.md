@@ -25,7 +25,7 @@ spec:
   caBundle: <PEM 编码的 CA 证书，用于对 Webhook 服务器的证书签名>
 ```
 
-# [apiserver-runtime](https://github.com/kubernetes-sigs/apiserver-runtime) （Alpha）
+# [apiserver-runtime](https://github.com/kubernetes-sigs/apiserver-runtime) （不推荐）
 
 apiserver-runtime 是专门开发 Kubernetes 聚合 API 的 SDK 框架
 
