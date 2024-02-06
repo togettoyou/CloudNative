@@ -49,9 +49,9 @@ webhooks:
     failurePolicy: Ignore
 ```
 
-> 当使用到 `clientConfig.service` 时，服务器证书才必须对 `<svc_name>.<svc_namespace>.svc` 有效
+> 当使用到 `clientConfig.service` 时，服务器证书必须对 `<svc_name>.<svc_namespace>.svc` 有效
 >
-> 若使用 `clientConfig.url` ，则不做要求
+> 若使用 `clientConfig.url` ，服务器证书则需要对 url 有效
 
 ### 方案二：利用 [cert-manager](https://github.com/cert-manager/cert-manager) 自动颁发证书
 
