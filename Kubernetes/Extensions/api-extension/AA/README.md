@@ -2,7 +2,7 @@
 
 参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/
 
-# Kubernetes API Server 必须通过 HTTPS 访问扩展 API 服务器（Extension API Server）
+# Kubernetes API Server 建议通过 HTTPS 访问扩展 API 服务器（Extension API Server）
 
 参考：[admission-webhook](https://github.com/togettoyou/CloudNative/blob/main/Kubernetes/Extensions/admission-webhook/README.md)
 
@@ -24,6 +24,8 @@ spec:
     name: <拓展 Apiserver 服务的名称>
   caBundle: <PEM 编码的 CA 证书，用于对 Webhook 服务器的证书签名>
 ```
+
+也可以通过 `insecureSkipTLSVerify: true` 禁用 TLS 证书验证（不建议）
 
 # [apiserver-runtime](https://github.com/kubernetes-sigs/apiserver-runtime) （不推荐）
 
