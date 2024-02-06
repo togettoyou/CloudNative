@@ -40,4 +40,6 @@ apiserver-runtime 是不稳定的，目前对于聚合 API
 
 apiserver-runtime 实际也是基于 kube-apiserver 组件的 k8s.io/apiserver 库提供扩展。建议直接学习使用该库，可以保证最大的灵活定制，不过难度也相应较大
 
-理论上，对于简单的需求，对照着 kube-apiserver 的协议，直接手写也是可以的
+# [Kubernetes API 协议规范](https://v1-27.docs.kubernetes.io/zh-cn/docs/reference/using-api/api-concepts/)
+
+理论上，对于简单的需求，对照着 kube-apiserver 的 API 协议，直接手写也是可以的
