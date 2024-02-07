@@ -2,7 +2,7 @@
 
 参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 
-# APIExtensionsServer
+# APIExtensionsServer 的 API Discovery
 
 APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Resource（CR）的 REST
 请求（自定义资源的接口）
@@ -26,4 +26,36 @@ APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Re
 方法添加到全局的 [AggregatedDiscoveryGroupManager](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apiserver/pkg/server/config.go#L278)
 内存对象中，以此聚合到 `/apis`
 路由返回的 [APIGroupList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apimachinery/pkg/apis/meta/v1/types.go#L1047-L1051)
-对象中
+或 [APIGroupDiscoveryList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/api/apidiscovery/v2beta1/types.go#L33-L41)
+（集群使用的默认方式，实际就是 APIGroupList+APIResourceList ，可以减少请求次数）对象中
+
+### 流程演示
+
+1. 创建 CRD ：
+
+```shell
+[root@node1 ~]# k apply -f crd.yaml 
+customresourcedefinition.apiextensions.k8s.io/crontabs.simple.extension.io created
+[root@node1 ~]# 
+```
+
+2. 查看 CR ，同时调整日志级别显示所请求的资源
+
+```shell
+[root@node1 ~]# k get CronTab -v 6
+I0207 15:20:44.379006   13196 loader.go:373] Config loaded from file:  /root/.kube/config
+I0207 15:20:44.387614   13196 discovery.go:214] Invalidating discovery information
+I0207 15:20:44.396388   13196 round_trippers.go:553] GET https://10.0.8.17:6443/api?timeout=32s 200 OK in 8 milliseconds
+I0207 15:20:44.399674   13196 round_trippers.go:553] GET https://10.0.8.17:6443/apis?timeout=32s 200 OK in 1 milliseconds
+I0207 15:20:44.407886   13196 round_trippers.go:553] GET https://10.0.8.17:6443/apis/simple.extension.io/v1/namespaces/default/crontabs?limit=500 200 OK in 1 milliseconds
+No resources found in default namespace.
+[root@node1 ~]# 
+```
+
+可以看到，首先会请求 `/api` 路由（核心 API ，没有 G 组的概念，只有 V 版本和 K 资源），返回的同样是 `APIGroupList` 或
+`APIGroupDiscoveryList`（默认）对象，对于 K 为 `CronTab` 的 CR 资源，肯定无法在此发现
+
+所以会接着继续请求 `/apis` 路由，从这里就可以找到 K 为 `CronTab` 所对应的 G 和 V
+了，即最终请求 `/apis/simple.extension.io/v1/namespaces/default/crontabs` 路由，而该路由也在创建 CRD 时动态注册了
+
+如果想显示详细的请求内容，可以调整日志级别为 `-v 9`
