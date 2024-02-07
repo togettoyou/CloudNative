@@ -44,3 +44,5 @@ apiserver-runtime 实际也是基于 kube-apiserver 组件的 k8s.io/apiserver �
 
 理论上，对于简单的需求，对照着 kube-apiserver
 的 [API 规范](https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/overview/kubernetes-api/)，直接手写也是可以的
+
+重点是需要实现 API Discovery ，使 kube-apiserver 可以知道 AA 实现了什么 CR ，从而将请求转发过来
