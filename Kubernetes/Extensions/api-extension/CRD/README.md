@@ -27,7 +27,11 @@ APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Re
 内存对象中，以此聚合到 `/apis`
 路由返回的 [APIGroupList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apimachinery/pkg/apis/meta/v1/types.go#L1047-L1051)
 或 [APIGroupDiscoveryList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/api/apidiscovery/v2beta1/types.go#L33-L41)
-（集群使用的默认方式，实际就是 APIGroupList+APIResourceList ，可以减少请求次数）对象中
+（实际就是 APIGroupList + APIResourceList ）对象中
+
+> v1.27+ 为了减少请求次数，请求 `/apis`
+> 时会默认指定 `Content-Type: application/json;g=apidiscovery.k8s.io;v=v2beta1;as=APIGroupDiscoveryList`
+> 来要求返回 APIGroupDiscoveryList 对象
 
 ### 流程演示
 
