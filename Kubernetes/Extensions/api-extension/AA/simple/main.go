@@ -78,6 +78,8 @@ func main() {
 	hellos := r.PathPrefix("/apis/simple.aa.io/v1beta1").Subrouter()
 
 	handle := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
 		accept := r.Header.Get("Accept")
 		if strings.Contains(accept, "application/json") && strings.Contains(accept, "as=Table") {
 			w.Write(apis.TODOHelloTable())
