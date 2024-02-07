@@ -1,11 +1,11 @@
-# 定制资源
+# 定制资源定义（CustomResourceDefinitions，CRD）
 
 参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 
 # APIExtensionsServer 的 API Discovery
 
 APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Resource（CR）的 REST
-请求（自定义资源的接口）
+请求（自定义资源的通用处理接口）
 
 其中的 [DiscoveryController](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apiextensions-apiserver/pkg/apiserver/customresource_discovery_controller.go#L45)
 会监听 CRD
@@ -27,8 +27,10 @@ APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Re
 内存对象中，以此聚合到 `/apis`
 路由返回的 [APIGroupList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apimachinery/pkg/apis/meta/v1/types.go#L1047-L1051)
 或 [APIGroupDiscoveryList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/api/apidiscovery/v2beta1/types.go#L33-L41)
-（实际就是 APIGroupList + APIResourceList ）对象中
+对象中
 
+> APIGroupDiscoveryList = APIGroupList + APIResourceList
+>
 > v1.27+ 为了减少请求次数，请求 `/apis`
 > 时会默认指定 `Content-Type: application/json;g=apidiscovery.k8s.io;v=v2beta1;as=APIGroupDiscoveryList`
 > 来要求返回 APIGroupDiscoveryList 对象
