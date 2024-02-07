@@ -66,7 +66,7 @@ No resources found in default namespace.
 ```
 
 可以看到，首先会请求 `/api` 路由（核心 API ，没有 G 组的概念，只有 V 版本和 K 资源），返回的同样是 `APIGroupList` 或
-`APIGroupDiscoveryList` 对象，对于 K 为 `CronTab` 的 CR 资源，肯定无法在此发现
+`APIGroupDiscoveryList` 对象（这里是 `APIGroupDiscoveryList` ），对于 K 为 `CronTab` 的 CR 资源，肯定无法在此发现
 
 所以会接着继续请求 `/apis` 路由，从这里就可以找到 K 为 `CronTab` 所对应的 G 和 V
 了，即最终请求 `/apis/simple.extension.io/v1/namespaces/default/crontabs`
