@@ -4,6 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"simple/pkg/apis"
+
+	"k8s.io/klog/v2"
 )
 
 var (
@@ -26,12 +29,15 @@ func main() {
 
 	// API Discovery
 	http.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
-
+		klog.Info("API Discovery", "/apis")
+		_ = apis.APIGroupList
 	})
 	http.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
+		klog.Info("API Discovery", "/apis/simple.aa.io")
 
 	})
 	http.HandleFunc("/apis/simple.aa.io/v1beta1", func(w http.ResponseWriter, r *http.Request) {
+		klog.Info("API Discovery", "/apis/simple.aa.io/v1beta1")
 
 	})
 
