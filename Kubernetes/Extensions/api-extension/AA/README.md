@@ -46,3 +46,17 @@ apiserver-runtime 实际也是基于 kube-apiserver 组件的 k8s.io/apiserver �
 的 [API 规范](https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/overview/kubernetes-api/)，直接手写也是可以的
 
 重点是需要实现 API Discovery ，使 kube-apiserver 可以知道 AA 实现了什么 CR ，从而将请求转发过来
+
+# AggregatorServer 的 API Discovery
+
+当 AggregatorServer 接收到请求之后，如果发现对应的是一个 APIService 的请求，则会直接转发到对应的服务上
+
+和 [APIExtensionsServer 的 API Discovery](https://github.com/togettoyou/CloudNative/blob/main/Kubernetes/Extensions/api-extension/CRD/README.md#apiextensionsserver-%E7%9A%84-api-discovery)
+类似，AggregatorServer
+也有一个 [DiscoveryAggregationController](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/kube-aggregator/pkg/apiserver/handler_discovery.go#L50-L64)
+会监听 APIService
+资源的变化，[调用 AA 的 /apis 接口](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/kube-aggregator/pkg/apiserver/handler_discovery.go#L192-L207)
+，然后将 AA 的 APIGroupDiscoveryList
+对象[添加到 kube-apiserver 全局的 AggregatedDiscoveryGroupManager](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/kube-aggregator/pkg/apiserver/handler_discovery.go#L384)
+内存对象中，以此聚合到 kube-apiserver 的 `/apis` 端点
+
