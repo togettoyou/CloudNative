@@ -71,19 +71,19 @@ func main() {
 	})
 
 	// CR CRUD Handle
-	// K: hello
+	// K: Hello
 
-	// LIST -A
-	http.HandleFunc("/apis/simple.aa.io/v1beta1/hello", func(w http.ResponseWriter, r *http.Request) {
-
+	// list -A
+	http.HandleFunc("/apis/simple.aa.io/v1beta1/hellos", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("TODO"))
 	})
-	// LIST/POST by namespaces
-	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hello", func(w http.ResponseWriter, r *http.Request) {
-
+	// create/list by namespaces
+	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hellos", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("TODO"))
 	})
-	// GET/PATCH/DELETE by name
-	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hello/:name", func(w http.ResponseWriter, r *http.Request) {
-
+	// delete/get/update/patch by name
+	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hellos/:name", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("TODO"))
 	})
 
 	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, nil))
