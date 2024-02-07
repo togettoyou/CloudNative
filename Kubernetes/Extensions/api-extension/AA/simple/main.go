@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"simple/pkg/apis"
+	"strings"
 
 	"k8s.io/klog/v2"
 )
@@ -30,8 +31,30 @@ func main() {
 	// API Discovery
 	http.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis")
-		_ = apis.APIGroupList
-		_ = apis.APIGroupDiscoveryList
+
+		// 判断 header 是否有 Accept: application/json;as=APIGroupDiscoveryList;v=v2beta1;g=apidiscovery.k8s.io
+		// 来区分是请求 APIGroupDiscoveryList 还是 APIGroupList 对象
+		var as, v, g string
+		accept := r.Header.Get("Accept")
+		if accept != "" {
+			for _, data := range strings.Split(accept, ";") {
+				if values := strings.Split(data, "="); len(values) == 2 {
+					switch values[0] {
+					case "as":
+						as = values[1]
+					case "v":
+						v = values[1]
+					case "g":
+						g = values[1]
+					}
+				}
+			}
+		}
+		if as == "APIGroupDiscoveryList" && v == "v2beta1" && g == "apidiscovery.k8s.io" {
+			w.Write(apis.APIGroupDiscoveryList())
+			return
+		}
+		w.Write(apis.APIGroupList())
 	})
 	http.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis/simple.aa.io")
