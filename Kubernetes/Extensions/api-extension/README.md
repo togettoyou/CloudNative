@@ -16,8 +16,8 @@
 
 ### 方案一：定制资源（Custom Resource）+ 定制控制器（Custom Controller）= Operator 模式
 
-利用 kube-apiserver 的最后一个服务 APIExtensionsServer ，kube-apiserver 对 CR 有通用的处理，和内置资源一样，存储到
-etcd 中，创建 CRD 无需编码，但往往需要结合自定义 Controller 一起使用，即 Operator 模式
+利用 kube-apiserver 的最后一个服务 APIExtensionsServer ，kube-apiserver 对 CRD 声明的 CR 有通用的 CRUD Handle
+，和内置资源一样，存储到 etcd 中，创建 CRD 无需编码，但往往需要结合自定义 Controller 一起使用，即 Operator 模式
 
 ### 方案二：Aggregated APIServer （AA）API 聚合服务
 
@@ -30,4 +30,12 @@ API 服务器（Extension API Server），相比方案一，有更强扩展性�
 
 - 可以与任何其它外部系统集成
 
-若无特殊需求，推荐使用方案一
+但也有缺点，需要自行实现 REST API ：
+
+- API Discovery
+
+- OpenAPI v2/v3 Specification（非必须）
+
+- CR 的 CRUD Handle
+
+因此，若无特殊需求，推荐直接使用方案一
