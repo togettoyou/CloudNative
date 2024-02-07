@@ -80,21 +80,24 @@ func main() {
 	hellos.HandleFunc("/hellos", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info(r.Method, " /hellos")
 
-		w.Write([]byte("TODO"))
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(apis.TODOHello())
 	})
 	// create/list by namespaces
 	hellos.HandleFunc("/namespaces/{ns}/hellos", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		klog.Info(r.Method, fmt.Sprintf(" /namespaces/%s/hellos", vars["ns"]))
 
-		w.Write([]byte("TODO"))
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(apis.TODOHello())
 	})
 	// delete/get/update/patch by name
 	hellos.HandleFunc("/namespaces/{ns}/hellos/{name}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		klog.Info(r.Method, fmt.Sprintf(" /namespaces/%s/hellos/%s", vars["ns"], vars["name"]))
 
-		w.Write([]byte("TODO"))
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(apis.TODOHello())
 	})
 
 	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, r))
