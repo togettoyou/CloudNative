@@ -3,6 +3,7 @@ module simple
 go 1.20
 
 require (
+	k8s.io/api v0.27.10
 	k8s.io/apimachinery v0.27.10
 	k8s.io/klog/v2 v2.90.1
 )

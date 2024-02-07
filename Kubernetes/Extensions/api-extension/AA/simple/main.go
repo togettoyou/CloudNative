@@ -31,6 +31,7 @@ func main() {
 	http.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis")
 		_ = apis.APIGroupList
+		_ = apis.APIGroupDiscoveryList
 	})
 	http.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis/simple.aa.io")
