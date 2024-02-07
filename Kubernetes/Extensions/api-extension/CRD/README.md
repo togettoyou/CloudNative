@@ -60,6 +60,7 @@ No resources found in default namespace.
 `APIGroupDiscoveryList`（默认）对象，对于 K 为 `CronTab` 的 CR 资源，肯定无法在此发现
 
 所以会接着继续请求 `/apis` 路由，从这里就可以找到 K 为 `CronTab` 所对应的 G 和 V
-了，即最终请求 `/apis/simple.extension.io/v1/namespaces/default/crontabs` 路由，而该路由也在创建 CRD 时动态注册了
+了，即最终请求 `/apis/simple.extension.io/v1/namespaces/default/crontabs`
+路由（ [CR 通用的 CRUD Handle 逻辑](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apiextensions-apiserver/pkg/apiserver/customresource_handler.go#L225-L360)）
 
 如果想显示详细的请求内容，可以调整日志级别为 `-v 9`
