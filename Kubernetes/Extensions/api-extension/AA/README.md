@@ -57,10 +57,10 @@ apiserver-runtime 实际也是基于 kube-apiserver 组件的 k8s.io/apiserver �
 会监听 APIService
 资源的变化，[调用 AA 的 /apis 接口](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/kube-aggregator/pkg/apiserver/handler_discovery.go#L192-L207)
 ，然后将 AA 的 APIGroupDiscoveryList
-对象[添加到 kube-apiserver 全局的 AggregatedDiscoveryGroupManager](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/kube-aggregator/pkg/apiserver/handler_discovery.go#L384)
+对象 [添加到 kube-apiserver 全局的 AggregatedDiscoveryGroupManager](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/kube-aggregator/pkg/apiserver/handler_discovery.go#L384)
 内存对象中，以此聚合到 kube-apiserver 的 `/apis` 端点
 
-因此，对于 AA ，我们至少需要自行实现以下接口：
+因此，对于 AA ，我们至少需要自行实现以下接口用于 API Discovery ：
 
 - `/apis` ：用于给 AggregatorServer 获取 AA 的 APIGroupDiscoveryList 对象
 
