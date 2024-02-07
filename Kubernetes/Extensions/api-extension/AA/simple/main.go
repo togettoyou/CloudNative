@@ -50,19 +50,24 @@ func main() {
 				}
 			}
 		}
-		if as == "APIGroupDiscoveryList" && v == "v2beta1" && g == "apidiscovery.k8s.io" {
+		_ = v
+		if as == "APIGroupDiscoveryList" && g == "apidiscovery.k8s.io" {
+			w.Header().Set("Content-Type", "application/json;as=APIGroupDiscoveryList;v=v2beta1;g=apidiscovery.k8s.io")
 			w.Write(apis.APIGroupDiscoveryList())
 			return
 		}
+		w.Header().Set("Content-Type", "application/json")
 		w.Write(apis.APIGroupList())
 	})
 	http.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis/simple.aa.io")
-
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(apis.APIGroup())
 	})
 	http.HandleFunc("/apis/simple.aa.io/v1beta1", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis/simple.aa.io/v1beta1")
-
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(apis.APIResourceList())
 	})
 
 	// CR CRUD Handle

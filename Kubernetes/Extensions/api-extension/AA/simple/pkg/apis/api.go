@@ -8,9 +8,23 @@ import (
 )
 
 var (
+	_APIGroup = &metav1.APIGroup{
+		TypeMeta:                   metav1.TypeMeta{},
+		Name:                       "",
+		Versions:                   nil,
+		PreferredVersion:           metav1.GroupVersionForDiscovery{},
+		ServerAddressByClientCIDRs: nil,
+	}
+
 	_APIGroupList = &metav1.APIGroupList{
 		TypeMeta: metav1.TypeMeta{},
 		Groups:   nil,
+	}
+
+	_APIResourceList = &metav1.APIResourceList{
+		TypeMeta:     metav1.TypeMeta{},
+		GroupVersion: "",
+		APIResources: nil,
 	}
 
 	_APIGroupDiscoveryList = &apidiscoveryv2beta1.APIGroupDiscoveryList{
@@ -20,8 +34,16 @@ var (
 	}
 )
 
+func APIGroup() []byte {
+	return marshal(_APIGroup)
+}
+
 func APIGroupList() []byte {
 	return marshal(_APIGroupList)
+}
+
+func APIResourceList() []byte {
+	return marshal(_APIResourceList)
 }
 
 func APIGroupDiscoveryList() []byte {
