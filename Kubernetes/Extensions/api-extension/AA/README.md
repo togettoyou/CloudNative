@@ -66,4 +66,6 @@ apiserver-runtime 实际也是基于 kube-apiserver 组件的 k8s.io/apiserver �
 
 - `/apis/<group>` ：CRD 会动态注册，但 AA 需要自行实现，返回 APIGroup 对象
 
-- `/apis/<group>/<version>` ： ：CRD 会动态注册，但 AA 需要自行实现，返回 APIResourceList 对象
+- `/apis/<group>/<version>` ：CRD 会动态注册，但 AA 需要自行实现，返回 APIResourceList 对象
+
+另外对于 CRD 声明的 CR 会有通用的 CRUD Handle 逻辑，但对于 AA 所创建的 CR 的 CRUD Handle 是需要自行实现的
