@@ -76,29 +76,38 @@ func main() {
 	// CR CRUD Handle
 	// K: Hello
 	hellos := r.PathPrefix("/apis/simple.aa.io/v1beta1").Subrouter()
+
+	handle := func(w http.ResponseWriter, r *http.Request) {
+		accept := r.Header.Get("Accept")
+		if strings.Contains(accept, "application/json") && strings.Contains(accept, "as=Table") {
+			w.Write(apis.TODOHelloTable())
+			return
+		}
+		w.Write(apis.TODOHello())
+	}
+
 	// list -A
 	hellos.HandleFunc("/hellos", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info(r.Method, " /hellos")
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(apis.TODOHello())
-	})
-	// create/list by namespaces
+		handle(w, r)
+	}).Methods("GET")
+
+	// list by namespaces
 	hellos.HandleFunc("/namespaces/{ns}/hellos", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		klog.Info(r.Method, fmt.Sprintf(" /namespaces/%s/hellos", vars["ns"]))
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(apis.TODOHello())
-	})
-	// delete/get/update/patch by name
+		handle(w, r)
+	}).Methods("GET")
+
+	// get by name
 	hellos.HandleFunc("/namespaces/{ns}/hellos/{name}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		klog.Info(r.Method, fmt.Sprintf(" /namespaces/%s/hellos/%s", vars["ns"], vars["name"]))
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(apis.TODOHello())
-	})
+		handle(w, r)
+	}).Methods("GET")
 
 	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, r))
 }
