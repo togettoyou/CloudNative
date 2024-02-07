@@ -22,7 +22,7 @@ func main() {
 	flag.Parse()
 
 	// APIService: v1beta1.simple.aa.io
-	// GVK: simple.aa.io/v1beta1/hello
+	// GV: simple.aa.io/v1beta1
 
 	// API Discovery
 	http.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +35,9 @@ func main() {
 
 	})
 
-	// AA CR CRUD Handle
+	// CR CRUD Handle
+	// K: hello
+
 	// LIST -A
 	http.HandleFunc("/apis/simple.aa.io/v1beta1/hello", func(w http.ResponseWriter, r *http.Request) {
 
