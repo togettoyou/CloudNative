@@ -7,6 +7,7 @@ import (
 	"simple/pkg/apis"
 	"strings"
 
+	"github.com/gorilla/mux"
 	"k8s.io/klog/v2"
 )
 
@@ -25,11 +26,13 @@ func init() {
 func main() {
 	flag.Parse()
 
+	r := mux.NewRouter()
+
 	// APIService: v1beta1.simple.aa.io
 	// GV: simple.aa.io/v1beta1
 
 	// API Discovery
-	http.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis")
 
 		// 判断 header 是否有 Accept: application/json;as=APIGroupDiscoveryList;v=v2beta1;g=apidiscovery.k8s.io
@@ -59,12 +62,12 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(apis.APIGroupList())
 	})
-	http.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis/simple.aa.io")
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(apis.APIGroup())
 	})
-	http.HandleFunc("/apis/simple.aa.io/v1beta1", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/apis/simple.aa.io/v1beta1", func(w http.ResponseWriter, r *http.Request) {
 		klog.Info("API Discovery", "/apis/simple.aa.io/v1beta1")
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(apis.APIResourceList())
@@ -72,19 +75,27 @@ func main() {
 
 	// CR CRUD Handle
 	// K: Hello
-
+	hellos := r.PathPrefix("/apis/simple.aa.io/v1beta1").Subrouter()
 	// list -A
-	http.HandleFunc("/apis/simple.aa.io/v1beta1/hellos", func(w http.ResponseWriter, r *http.Request) {
+	hellos.HandleFunc("/hellos", func(w http.ResponseWriter, r *http.Request) {
+		klog.Info(r.Method, " /hellos")
+
 		w.Write([]byte("TODO"))
 	})
 	// create/list by namespaces
-	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hellos", func(w http.ResponseWriter, r *http.Request) {
+	hellos.HandleFunc("/namespaces/{ns}/hellos", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		klog.Info(r.Method, fmt.Sprintf(" /namespaces/%s/hellos", vars["ns"]))
+
 		w.Write([]byte("TODO"))
 	})
 	// delete/get/update/patch by name
-	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hellos/:name", func(w http.ResponseWriter, r *http.Request) {
+	hellos.HandleFunc("/namespaces/{ns}/hellos/{name}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		klog.Info(r.Method, fmt.Sprintf(" /namespaces/%s/hellos/%s", vars["ns"], vars["name"]))
+
 		w.Write([]byte("TODO"))
 	})
 
-	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, nil))
+	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, r))
 }

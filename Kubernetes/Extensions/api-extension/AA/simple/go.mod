@@ -3,6 +3,7 @@ module simple
 go 1.20
 
 require (
+	github.com/gorilla/mux v1.8.1
 	k8s.io/api v0.27.10
 	k8s.io/apimachinery v0.27.10
 	k8s.io/klog/v2 v2.90.1
