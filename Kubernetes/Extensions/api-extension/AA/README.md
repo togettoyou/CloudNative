@@ -63,10 +63,12 @@ apiserver-runtime 实际是基于 kube-apiserver 组件的 k8s.io/apiserver 库�
 
 因此，对于 AA 服务，我们至少需要自行实现以下接口用于 API Discovery ：
 
-- `/apis` ：用于给 AggregatorServer 获取 AA 的 APIGroupDiscoveryList 对象
+- `/apis` ：用于给 AggregatorServer 获取 AA 的 APIGroupDiscoveryList 或 APIGroupList 对象
 
 - `/apis/<group>` ：CRD 会动态注册，但 AA 需要自行实现，返回 APIGroup 对象
 
 - `/apis/<group>/<version>` ：CRD 会动态注册，但 AA 需要自行实现，返回 APIResourceList 对象
+
+> 其中 `/apis` 返回的 APIGroupList 对象，以及 `/apis/<group>` 和 `/apis/<group>/<version>` 路由是为了兼容 1.27 之前版本
 
 另外，对于 CRD 声明的 CR 会有通用的 CRUD Handle ，但对于 AA 所创建的 CR 是需要自行实现逻辑的
