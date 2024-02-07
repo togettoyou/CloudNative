@@ -24,5 +24,30 @@ func main() {
 	// APIService: v1beta1.simple.aa.io
 	// GVK: simple.aa.io/v1beta1/hello
 
+	// API Discovery
+	http.HandleFunc("/apis", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+	http.HandleFunc("/apis/simple.aa.io", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+	http.HandleFunc("/apis/simple.aa.io/v1beta1", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+
+	// AA CR CRUD Handle
+	// LIST -A
+	http.HandleFunc("/apis/simple.aa.io/v1beta1/hello", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+	// LIST/POST by namespaces
+	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hello", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+	// GET/PATCH/DELETE by name
+	http.HandleFunc("/apis/simple.aa.io/v1beta1/namespaces/:ns/hello/:name", func(w http.ResponseWriter, r *http.Request) {
+
+	})
+
 	panic(http.ListenAndServeTLS(fmt.Sprintf(":%d", port), crt, key, nil))
 }
