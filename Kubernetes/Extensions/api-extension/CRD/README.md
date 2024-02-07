@@ -21,7 +21,7 @@ APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Re
   ：返回的是一个 [APIResourceList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apimachinery/pkg/apis/meta/v1/types.go#L1148-L1154)
   对象
 
-并且还会将 APIGroup
+并且还会将 GroupVersion 和 Resources
 信息通过 [AddGroupVersion](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apiextensions-apiserver/pkg/apiserver/customresource_discovery_controller.go#L267-L271)
 方法添加到全局的 [AggregatedDiscoveryGroupManager](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/apiserver/pkg/server/config.go#L278)
 内存对象中，以此聚合到 `/apis`
@@ -29,11 +29,18 @@ APIExtensionsServer 用于处理 CustomResourceDefinitions（CRD）和 Custom Re
 或 [APIGroupDiscoveryList](https://github.com/kubernetes/kubernetes/blob/v1.27.2/staging/src/k8s.io/api/apidiscovery/v2beta1/types.go#L33-L41)
 对象中
 
+> APIGroupDiscoveryList 是 [1.26 新增的 API](https://github.com/kubernetes/enhancements/issues/3352) （默认关闭）, 在 1.27
+> 默认开启
+>
 > APIGroupDiscoveryList = APIGroupList + APIResourceList
 >
-> v1.27+ 为了减少请求次数，请求 `/apis`
-> 时会默认指定 `Content-Type: application/json;g=apidiscovery.k8s.io;v=v2beta1;as=APIGroupDiscoveryList`
-> 来要求返回 APIGroupDiscoveryList 对象
+> 作用：减少请求次数，直接请求 `/apis` 端点一次性获取到 APIGroupDiscoveryList 对象
+>
+> v1.26 或之前版本需要请求 `/apis` 获取 APIGroupList 对象，随后再继续请求 `/apis/<group>` 和 `/apis/<group>/<version>`
+> 端点获取到所有的 APIResourceList 对象
+>
+> 可以通过判断 header 是否有 `Accept: application/json;as=APIGroupDiscoveryList;v=v2beta1;g=apidiscovery.k8s.io` 来区分是请求
+> APIGroupDiscoveryList 还是 APIGroupList 对象
 
 ### 流程演示
 
@@ -59,7 +66,7 @@ No resources found in default namespace.
 ```
 
 可以看到，首先会请求 `/api` 路由（核心 API ，没有 G 组的概念，只有 V 版本和 K 资源），返回的同样是 `APIGroupList` 或
-`APIGroupDiscoveryList`（默认）对象，对于 K 为 `CronTab` 的 CR 资源，肯定无法在此发现
+`APIGroupDiscoveryList` 对象，对于 K 为 `CronTab` 的 CR 资源，肯定无法在此发现
 
 所以会接着继续请求 `/apis` 路由，从这里就可以找到 K 为 `CronTab` 所对应的 G 和 V
 了，即最终请求 `/apis/simple.extension.io/v1/namespaces/default/crontabs`
