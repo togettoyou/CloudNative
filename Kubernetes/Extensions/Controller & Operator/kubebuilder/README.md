@@ -5,6 +5,7 @@
 初始化项目：
 
 ```shell
+mkdir simple
 kubebuilder init --project-name simple --repo simple
 ```
 
