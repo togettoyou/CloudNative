@@ -3,7 +3,7 @@
 安装 Kubebuilder 脚手架工具：
 
 ```shell
-curl -L -o kubebuilder "https://github.com/kubernetes-sigs/kubebuilder/releases/v3.11.1/$(go env GOOS)/$(go env GOARCH)"
+curl -L -o kubebuilder "https://go.kubebuilder.io/dl/v3.11.1/$(go env GOOS)/$(go env GOARCH)"
 chmod +x kubebuilder && mv kubebuilder /usr/local/bin/
 ```
 
