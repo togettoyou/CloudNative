@@ -6,6 +6,7 @@
 
 ```shell
 mkdir simple
+cd simple
 kubebuilder init --project-name simple --repo simple
 ```
 
