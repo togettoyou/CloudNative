@@ -21,3 +21,5 @@ kubebuilder create api --group simple --version v1 --kind MyPod
 ```
 
 参考：[book.kubebuilder.io](https://book.kubebuilder.io/)
+
+使用 Operator SDK 生成的代码结构可参考 [sidecar-go](https://github.com/togettoyou/sidecar-go)
