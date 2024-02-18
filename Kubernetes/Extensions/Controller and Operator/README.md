@@ -15,3 +15,5 @@ Manager、 Controller、 Webhook、 Reconciler、 Source、 EventHandler、 Pred
 
 Kubebuilder 和 Operator SDK 都是社区中比较流行的用于生成 Operator 代码的脚手架工具，可以帮助开发者自动生成一些重复性的代码和资源定义，创建的项目都是使用
 controller-runtime 框架
+
+理解了 controller-runtime 框架，Kubebuilder 和 Operator SDK 就很容易上手
