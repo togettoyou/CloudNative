@@ -10,4 +10,10 @@ cd simple
 kubebuilder init --project-name simple --repo simple
 ```
 
+Kubebuilder 特别适合开发 CRD + Controller ，大部分业务逻辑无关的代码都可以自动生成，例如：
+
+```shell
+kubebuilder create api --group simple.controller.io --version v1 --kind MyPod
+```
+
 参考：[book.kubebuilder.io](https://book.kubebuilder.io/)
