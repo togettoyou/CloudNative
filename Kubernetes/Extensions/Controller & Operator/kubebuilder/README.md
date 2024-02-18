@@ -1,11 +1,6 @@
 # 使用 Kubebuilder 开发 controller
 
-安装 Kubebuilder 脚手架工具：
-
-```shell
-curl -L -o kubebuilder "https://go.kubebuilder.io/dl/v3.11.1/$(go env GOOS)/$(go env GOARCH)"
-chmod +x kubebuilder && mv kubebuilder /usr/local/bin/
-```
+安装 Kubebuilder 脚手架工具：[v3.11.1](https://github.com/kubernetes-sigs/kubebuilder/releases/v3.11.1/)
 
 初始化项目：
 
