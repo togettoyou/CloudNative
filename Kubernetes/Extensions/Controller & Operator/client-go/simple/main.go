@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"time"
 
@@ -84,13 +85,12 @@ func main() {
 	// 初始化控制器
 	controller := NewController(queue, podInformer.Lister(), podInformer.Informer())
 
-	stopCh := make(chan struct{})
-	defer close(stopCh)
+	ctx := context.Background()
 
 	// 启动 Informer
-	sharedInformerFactory.Start(stopCh)
+	sharedInformerFactory.Start(ctx.Done())
 	// 启动控制器
-	go controller.Run(1, stopCh)
+	go controller.Run(ctx, 1)
 
 	select {}
 }
