@@ -7,13 +7,17 @@
 ```shell
 mkdir simple
 cd simple
-kubebuilder init --project-name simple --repo simple
+kubebuilder init --project-name simple --domain controller.io --repo simple
 ```
+
+> `--domain` 是自定义 CRD group 的 domain 后缀
+>
+> `--repo` 是 go module 名
 
 Kubebuilder 特别适合开发 CRD + Controller ，大部分业务逻辑无关的代码都可以自动生成，例如：
 
 ```shell
-kubebuilder create api --group simple.controller.io --version v1 --kind MyPod
+kubebuilder create api --group simple --version v1 --kind MyPod
 ```
 
 参考：[book.kubebuilder.io](https://book.kubebuilder.io/)
