@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"time"
 
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
@@ -52,7 +51,7 @@ func main() {
 	}
 
 	// 创建 SharedInformerFactory 实例
-	sharedInformerFactory := informers.NewSharedInformerFactory(clientSet, 10*time.Second)
+	sharedInformerFactory := informers.NewSharedInformerFactory(clientSet, 0)
 
 	// 创建 Pod Informer
 	podInformer := sharedInformerFactory.Core().V1().Pods()
