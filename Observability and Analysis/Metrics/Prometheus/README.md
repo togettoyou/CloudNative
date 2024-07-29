@@ -7,18 +7,18 @@ helm repo update
 
 ```shell
 kubectl create ns monitoring
-helm install prometheus prometheus-community/prometheus -f values.yaml --version 25.8.2 -n monitoring
+helm install prometheus prometheus-community/prometheus -f values.yaml --version 25.24.1 -n monitoring
 ```
 
 ### 本地离线Chart方式
 
 ```shell
-wget https://github.com/prometheus-community/helm-charts/releases/download/prometheus-25.8.2/prometheus-25.8.2.tgz
+wget https://github.com/prometheus-community/helm-charts/releases/download/prometheus-25.24.1/prometheus-25.24.1.tgz
 ```
 
 ```shell
 kubectl create ns monitoring
-helm install prometheus prometheus-25.8.2.tgz -f values.yaml -n monitoring
+helm install prometheus prometheus-25.24.1.tgz -f values.yaml -n monitoring
 ```
 
 其中 `values.yaml` 配置文件：
@@ -41,7 +41,7 @@ prometheus-pushgateway:
   enabled: false
 ```
 
-配置参考：https://github.com/prometheus-community/helm-charts/tree/prometheus-25.8.2/charts/prometheus
+配置参考：https://github.com/prometheus-community/helm-charts/tree/prometheus-25.24.1/charts/prometheus
 
 ### 附录
 
