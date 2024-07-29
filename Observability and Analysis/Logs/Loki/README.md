@@ -34,6 +34,12 @@ singleBinary:
     enabled: true
     size: 10Gi
     storageClass: local-storage
+read:
+  replicas: 0
+write:
+  replicas: 0
+backend:
+  replicas: 0
 loki:
   auth_enabled: true
   server:
@@ -68,6 +74,11 @@ loki:
     filesystem:
       chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
+  storage:
+    bucketNames:
+      chunks: chunks
+      ruler: ruler
+      admin: admin
   storage_config:
     tsdb_shipper:
       active_index_directory: /var/loki/tsdb_shipper-active
