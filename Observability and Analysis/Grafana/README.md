@@ -7,18 +7,18 @@ helm repo update
 
 ```shell
 kubectl create ns monitoring
-helm install grafana grafana/grafana -f values.yaml --version 7.2.1 -n monitoring
+helm install grafana grafana/grafana -f values.yaml --version 8.3.6 -n monitoring
 ```
 
 ### 本地离线Chart方式
 
 ```shell
-wget https://github.com/grafana/helm-charts/releases/download/grafana-7.2.1/grafana-7.2.1.tgz
+wget https://github.com/grafana/helm-charts/releases/download/grafana-8.3.6/grafana-8.3.6.tgz
 ```
 
 ```shell
 kubectl create ns monitoring
-helm install grafana grafana-7.2.1.tgz -f values.yaml -n monitoring
+helm install grafana grafana-8.3.6.tgz -f values.yaml -n monitoring
 ```
 
 其中 `values.yaml` 配置文件：
@@ -40,7 +40,7 @@ grafana.ini:
     enabled: false
 ```
 
-配置参考：https://github.com/grafana/helm-charts/tree/grafana-7.2.1/charts/grafana
+配置参考：https://github.com/grafana/helm-charts/tree/grafana-8.3.6/charts/grafana
 
 ### 附录
 
