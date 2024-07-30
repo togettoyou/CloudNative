@@ -21,12 +21,25 @@ kubectl create ns monitoring
 helm install loki loki-6.7.3.tgz -f values.yaml -n monitoring
 ```
 
-其中 `values.yaml` 配置文件：
+### 配置参考
+
+https://github.com/grafana/loki/tree/helm-loki-6.7.3/production/helm/loki
+
+#### ALL 单体模式
+
+`values.yaml` 配置文件：
 
 ```yaml
 deploymentMode: SingleBinary
 singleBinary:
   replicas: 1
+  resources:
+    limits:
+      cpu: 2
+      memory: 4Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
   autoscaling:
     enabled: false
   persistence:
@@ -34,12 +47,20 @@ singleBinary:
     enabled: true
     size: 10Gi
     storageClass: local-storage
+backend:
+  replicas: 0
 read:
   replicas: 0
 write:
   replicas: 0
-backend:
-  replicas: 0
+lokiCanary:
+  enabled: false
+gateway:
+  enabled: false
+chunksCache:
+  enabled: false
+resultsCache:
+  enabled: false
 loki:
   auth_enabled: true
   server:
@@ -56,10 +77,18 @@ loki:
     reject_old_samples_max_age: 168h
     split_queries_by_interval: 15m
     query_timeout: 2m
+  commonConfig:
+    replication_factor: 1
+    path_prefix: /var/loki
   ingester:
     max_chunk_age: 2m
     chunk_idle_period: 30s
     flush_check_period: 5s
+  storage:
+    type: filesystem
+    filesystem:
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
   compactor:
     working_directory: /var/loki/compactor/retention
     compaction_interval: 10m
@@ -67,18 +96,6 @@ loki:
     retention_delete_delay: 2h
     delete_request_cancel_period: 1h
     delete_request_store: filesystem
-  commonConfig:
-    replication_factor: 1
-    path_prefix: /var/loki
-  commonStorageConfig:
-    filesystem:
-      chunks_directory: /var/loki/chunks
-      rules_directory: /var/loki/rules
-  storage:
-    bucketNames:
-      chunks: chunks
-      ruler: ruler
-      admin: admin
   storage_config:
     tsdb_shipper:
       active_index_directory: /var/loki/tsdb_shipper-active
@@ -96,7 +113,13 @@ loki:
           period: 24h
 ```
 
-配置参考：https://github.com/grafana/loki/tree/helm-loki-6.7.3/production/helm/loki
+#### SSD 简单可扩展部署模式
+
+`values.yaml` 配置文件：
+
+```yaml
+# TODO
+```
 
 ### 附录
 
