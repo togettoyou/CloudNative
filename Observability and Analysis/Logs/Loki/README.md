@@ -125,7 +125,21 @@ loki:
 
 ### 附录
 
-1. LocalPV 参考：
+1. 日志推送
+
+   ```
+   curl -H "Content-Type: application/json" -XPOST -s "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"  \
+   --data "{\"streams\": [{\"stream\": {\"job\": \"test\"}, \"values\": [[\"$(date +%s)000000000\", \"hello loki\"]]}]}" \
+   -H X-Scope-OrgId:test
+   ```
+
+2. 日志查询
+
+   ```
+   curl "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/query_range" --data-urlencode 'query={job="test"}' -H X-Scope-OrgId:test | jq .data.result
+   ```
+
+3. LocalPV 参考：
 
    ```yaml
    apiVersion: v1
