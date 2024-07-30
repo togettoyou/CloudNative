@@ -47,6 +47,10 @@ singleBinary:
     enabled: true
     size: 10Gi
     storageClass: local-storage
+  service:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "3100"
 backend:
   replicas: 0
 read:
