@@ -53,6 +53,8 @@ read:
   replicas: 0
 write:
   replicas: 0
+test:
+  enabled: false
 lokiCanary:
   enabled: false
 gateway:
