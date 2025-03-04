@@ -80,7 +80,7 @@ if [ "$SYSTEM_TYPE" = "apt" ]; then
     
     # 安装 containerd
     apt-get update
-    apt-get install -y containerd.io
+    apt-get install -y containerd.io=1.6.*
 else
     # CentOS/RHEL 系统
     yum install -y yum-utils device-mapper-persistent-data lvm2
