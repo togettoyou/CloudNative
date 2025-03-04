@@ -33,11 +33,9 @@ iptables -P FORWARD ACCEPT
 swapoff -a
 sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
-# 关闭 SELinux (仅适用于 CentOS/RHEL)
-if [ "$SYSTEM_TYPE" = "yum" ]; then
-    setenforce 0
-    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-fi
+# 关闭 SELinux
+setenforce 0
+sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 
 # 转发 IPv4 并让 iptables 看到桥接流量
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
