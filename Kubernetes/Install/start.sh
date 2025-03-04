@@ -93,7 +93,7 @@ sudo sed -i 's|sandbox_image = ".*"|sandbox_image = "registry.aliyuncs.com/googl
 
 systemctl enable containerd
 systemctl start containerd
-systemctl status containerd
+systemctl --no-pager status containerd
 
 
 #################### 部署k8s工具 ####################
