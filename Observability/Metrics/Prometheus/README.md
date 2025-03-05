@@ -48,7 +48,7 @@ prometheus-pushgateway:
 1. 国内无法拉取 `registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.12.0` 镜像，可以在节点执行：
 
    ```shell
-   ctr -n k8s.io image pull docker.io/hubmirrorbytogettoyou/registry.k8s.io.kube-state-metrics.kube-state-metrics:v2.12.0 && ctr -n k8s.io image tag docker.io/hubmirrorbytogettoyou/registry.k8s.io.kube-state-metrics.kube-state-metrics:v2.12.0 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.12.0
+   ctr -n k8s.io image pull registry.cn-hangzhou.aliyuncs.com/hubmirrorbytogettoyou/registry.k8s.io.kube-state-metrics.kube-state-metrics:v2.12.0 && ctr -n k8s.io image tag registry.cn-hangzhou.aliyuncs.com/hubmirrorbytogettoyou/registry.k8s.io.kube-state-metrics.kube-state-metrics:v2.12.0 registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.12.0
    ```
 
 2. LocalPV 参考：

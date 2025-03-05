@@ -42,7 +42,13 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
    ```
 
-   若 metrics-server 服务一直无法 ready ，需要编辑 Deployment 增加 `--kubelet-insecure-tls` 运行参数
+   若无法拉取镜像：
+
+   ```shell
+   ctr -n k8s.io image pull registry.cn-hangzhou.aliyuncs.com/hubmirrorbytogettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 && ctr -n k8s.io image tag registry.cn-hangzhou.aliyuncs.com/hubmirrorbytogettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
+   ```
+
+   若 metrics-server 服务一直无法 ready ，需要编辑 Deployment 增加 `--kubelet-insecure-tls` 运行参数：
 
    ```yaml
          containers:
