@@ -31,7 +31,7 @@ echo "检测到系统类型: $OS_NAME (包管理器: $SYSTEM_TYPE)"
 echo "-------------------------------------------"
 
 # 用户确认
-read -p "是否继续？(y/n): " confirm
+read -p "是否继续？(y/n): " confirm < /dev/tty
 if [[ $confirm != "y" && $confirm != "Y" ]]; then
     echo "已取消"
     exit 1
