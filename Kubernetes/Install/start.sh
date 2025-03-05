@@ -17,7 +17,6 @@ elif [ -f /etc/redhat-release ]; then
     # CentOS 发行版
     SYSTEM_TYPE="yum"
     OS_NAME="centos"
-    fi
 else
     echo "不支持的系统类型，仅支持 Ubuntu、Debian、CentOS"
     exit 1
