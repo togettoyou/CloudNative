@@ -14,16 +14,12 @@ if [ -f /etc/debian_version ]; then
         OS_NAME="debian"
     fi
 elif [ -f /etc/redhat-release ]; then
+    # CentOS 发行版
     SYSTEM_TYPE="yum"
-    if grep -qi "Red Hat" /etc/redhat-release; then
-        # RHEL 发行版
-        OS_NAME="rhel"
-    else
-        # CentOS 发行版
-        OS_NAME="centos"
+    OS_NAME="centos"
     fi
 else
-    echo "不支持的系统类型，仅支持 Ubuntu、Debian、CentOS 和 RHEL"
+    echo "不支持的系统类型，仅支持 Ubuntu、Debian、CentOS"
     exit 1
 fi
 
