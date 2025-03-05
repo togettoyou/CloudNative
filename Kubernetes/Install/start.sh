@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 设置镜像源地址，默认为阿里云镜像
+MIRROR_URL="${1:-https://mirrors.aliyun.com}"
+
 #################### 检测系统类型 ####################
 
 # 检测系统类型
@@ -85,12 +88,12 @@ if [ "$SYSTEM_TYPE" = "apt" ]; then
 
     # 添加 Docker GPG 密钥
     sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/$OS_NAME/gpg -o /etc/apt/keyrings/docker.asc
+    sudo curl -fsSL $MIRROR_URL/docker-ce/linux/$OS_NAME/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     # 设置 Docker apt 源
     echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://mirrors.aliyun.com/docker-ce/linux/$OS_NAME/ \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $MIRROR_URL/docker-ce/linux/$OS_NAME/ \
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
@@ -98,7 +101,7 @@ if [ "$SYSTEM_TYPE" = "apt" ]; then
     apt-get install -y containerd.io=1.6.*
 else
     yum install -y yum-utils device-mapper-persistent-data lvm2
-    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/$OS_NAME/docker-ce.repo
+    yum-config-manager --add-repo $MIRROR_URL/docker-ce/linux/$OS_NAME/docker-ce.repo
     yum install containerd.io-1.6.26 -y
 fi
 
@@ -116,10 +119,10 @@ systemctl --no-pager status containerd
 
 if [ "$SYSTEM_TYPE" = "apt" ]; then
     # 添加 kubernetes GPG 密钥
-    curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    curl -fsSL $MIRROR_URL/kubernetes/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
     # 设置 kubernetes apt 源
-    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] $MIRROR_URL/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
     sudo apt-get update
     sudo apt-get install -y kubelet=1.27.2-00 kubeadm=1.27.2-00 kubectl=1.27.2-00
@@ -128,11 +131,11 @@ else
     cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+baseurl=$MIRROR_URL/kubernetes/yum/repos/kubernetes-el7-x86_64/
 enabled=1
 gpgcheck=1
 repo_gpgcheck=1
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+gpgkey=$MIRROR_URL/kubernetes/yum/doc/yum-key.gpg $MIRROR_URL/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
     yum install -y kubelet-1.27.2 kubeadm-1.27.2 kubectl-1.27.2
