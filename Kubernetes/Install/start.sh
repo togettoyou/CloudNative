@@ -4,19 +4,42 @@
 
 # 检测系统类型
 if [ -f /etc/debian_version ]; then
-    # 基于 Debian 的发行版
-    SYSTEM_TYPE="apt"
+    if grep -qi ubuntu /etc/os-release; then
+        # Ubuntu 发行版
+        SYSTEM_TYPE="apt"
+        OS_NAME="ubuntu"
+    else
+        # Debian 发行版
+        SYSTEM_TYPE="apt"
+        OS_NAME="debian"
+    fi
 elif [ -f /etc/redhat-release ]; then
-    # 基于 Red Hat 的发行版
     SYSTEM_TYPE="yum"
+    if grep -qi "Red Hat" /etc/redhat-release; then
+        # RHEL 发行版
+        OS_NAME="rhel"
+    else
+        # CentOS 发行版
+        OS_NAME="centos"
+    fi
 else
-    echo "不支持的系统类型，脚本将退出"
+    echo "不支持的系统类型，仅支持 Ubuntu、Debian、CentOS 和 RHEL"
+    exit 1
+fi
+
+echo "检测到系统类型: $OS_NAME (包管理器: $SYSTEM_TYPE)"
+echo "-------------------------------------------"
+
+# 用户确认
+read -p "是否继续？(y/n): " confirm
+if [[ $confirm != "y" && $confirm != "Y" ]]; then
+    echo "已取消"
     exit 1
 fi
 
 #################### 准备工作 ####################
 
-# 关闭防火墙，清理防火墙规则，设置默认转发策略
+# 关闭防火墙
 if [ "$SYSTEM_TYPE" = "apt" ]; then
     if command -v ufw &> /dev/null; then
         ufw disable
@@ -26,6 +49,7 @@ else
     systemctl disable firewalld
 fi
 
+# 设置默认转发策略
 iptables -F && iptables -X && iptables -F -t nat && iptables -X -t nat
 iptables -P FORWARD ACCEPT
 
@@ -37,7 +61,7 @@ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 setenforce 0
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 
-# 转发 IPv4 并让 iptables 看到桥接流量
+# 加载内核模块
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 overlay
 br_netfilter
@@ -46,6 +70,7 @@ EOF
 sudo modprobe overlay
 sudo modprobe br_netfilter
 
+# 转发 IPv4 并让 iptables 看到桥接流量
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -54,13 +79,8 @@ EOF
 
 sudo sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g' /etc/sysctl.conf
 
+# 应用系统参数
 sudo sysctl --system
-
-lsmod | grep br_netfilter
-lsmod | grep overlay
-
-sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
-
 
 #################### 部署containerd ####################
 
@@ -70,12 +90,12 @@ if [ "$SYSTEM_TYPE" = "apt" ]; then
 
     # 添加 Docker GPG 密钥
     sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    sudo curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/$OS_NAME/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     # 设置 Docker apt 源
     echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://mirrors.aliyun.com/docker-ce/linux/debian/ \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://mirrors.aliyun.com/docker-ce/linux/$OS_NAME/ \
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
@@ -83,7 +103,7 @@ if [ "$SYSTEM_TYPE" = "apt" ]; then
     apt-get install -y containerd.io=1.6.*
 else
     yum install -y yum-utils device-mapper-persistent-data lvm2
-    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/$OS_NAME/docker-ce.repo
     yum install containerd.io-1.6.26 -y
 fi
 
