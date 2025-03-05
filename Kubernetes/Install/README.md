@@ -3,16 +3,8 @@
 所有节点执行：
 
 ```shell
-curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/Init/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/Install/start.sh | bash
 ```
-
-也可使用国内代理：
-
-```shell
-curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/Init/install.sh | bash
-```
-
-### 安装
 
 使用 kubeadm 创建集群：
 
@@ -20,7 +12,7 @@ curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/togettoyo
 kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --image-repository registry.aliyuncs.com/google_containers --v=5
 ```
 
-参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+后续参考：https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
 ### 附录
 
@@ -50,12 +42,6 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
    ```
 
-   国内无法拉取 `registry.k8s.io/metrics-server/metrics-server:v0.6.4` 镜像，可以在节点执行：
-
-   ```shell
-   ctr -n k8s.io image pull docker.io/hubmirrorbytogettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 && ctr -n k8s.io image tag docker.io/hubmirrorbytogettoyou/registry.k8s.io.metrics-server.metrics-server:v0.6.4 registry.k8s.io/metrics-server/metrics-server:v0.6.4
-   ```
-
    若 metrics-server 服务一直无法 ready ，需要编辑 Deployment 增加 `--kubelet-insecure-tls` 运行参数
 
    ```yaml
@@ -75,7 +61,8 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.27.2 --ima
 5. 启用 kubectl 自动补全功能
 
    ```shell
-   yum install bash-completion
+   # yum install bash-completion
+   # apt-get install bash-completion
    echo 'source /usr/share/bash-completion/bash_completion' >>~/.bashrc
    echo 'source <(kubectl completion bash)' >>~/.bashrc
    echo 'alias k=kubectl' >>~/.bashrc

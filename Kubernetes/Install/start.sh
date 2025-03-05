@@ -4,10 +4,10 @@
 
 # 检测系统类型
 if [ -f /etc/debian_version ]; then
-    # Debian/Ubuntu 系统
+    # 基于 Debian 的发行版
     SYSTEM_TYPE="apt"
 elif [ -f /etc/redhat-release ]; then
-    # CentOS/RHEL 系统
+    # 基于 Red Hat 的发行版
     SYSTEM_TYPE="yum"
 else
     echo "不支持的系统类型，脚本将退出"
@@ -65,22 +65,23 @@ sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables ne
 #################### 部署containerd ####################
 
 if [ "$SYSTEM_TYPE" = "apt" ]; then
-    # Debian/Ubuntu 系统
-    apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
-    
-    # 添加 Docker 的官方 GPG 密钥
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    
-    # 设置 Docker 仓库
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-    
-    # 安装 containerd
-    apt-get update
+    sudo apt-get update
+    sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+
+    # 添加 Docker GPG 密钥
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # 设置 Docker apt 源
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://mirrors.aliyun.com/docker-ce/linux/debian/ \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+
     apt-get install -y containerd.io=1.6.*
 else
-    # CentOS/RHEL 系统
     yum install -y yum-utils device-mapper-persistent-data lvm2
     yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
     yum install containerd.io-1.6.26 -y
@@ -92,27 +93,23 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/con
 sudo sed -i 's|sandbox_image = ".*"|sandbox_image = "registry.aliyuncs.com/google_containers/pause:3.9"|g' /etc/containerd/config.toml
 
 systemctl enable containerd
-systemctl start containerd
+systemctl restart containerd
 systemctl --no-pager status containerd
 
 
 #################### 部署k8s工具 ####################
 
 if [ "$SYSTEM_TYPE" = "apt" ]; then
-    # Debian/Ubuntu 系统
-    # 添加 Kubernetes 的 GPG 密钥
-    curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -
-    
-    # 添加 Kubernetes 的 apt 仓库
-    cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
-EOF
-    
-    apt-get update
-    apt-get install -y kubelet=1.27.2-00 kubeadm=1.27.2-00 kubectl=1.27.2-00
-    apt-mark hold kubelet kubeadm kubectl
+    # 添加 kubernetes GPG 密钥
+    curl -fsSL https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    # 设置 kubernetes apt 源
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+    sudo apt-get update
+    sudo apt-get install -y kubelet=1.27.2-00 kubeadm=1.27.2-00 kubectl=1.27.2-00
+    sudo apt-mark hold kubelet kubeadm kubectl
 else
-    # CentOS/RHEL 系统
     cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -122,7 +119,7 @@ gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
-    
+
     yum install -y kubelet-1.27.2 kubeadm-1.27.2 kubectl-1.27.2
 fi
 
