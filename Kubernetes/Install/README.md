@@ -1,18 +1,10 @@
 ### 部署
 
-所有节点执行（默认使用阿里云镜像源）：
+所有节点执行：
 
 ```shell
 curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/Install/start.sh | bash
 ```
-
-可以切换使用腾讯云镜像源：
-
-```shell
-curl -sSL https://raw.githubusercontent.com/togettoyou/CloudNative/main/Kubernetes/Install/start.sh | bash -s -- https://mirrors.cloud.tencent.com
-```
-
-> 附腾讯云服务器内网镜像源：https://mirrors.tencentyun.com
 
 脚本执行成功后，使用 kubeadm 创建集群：
 
