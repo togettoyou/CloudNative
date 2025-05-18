@@ -3,10 +3,24 @@ kind: KubeSchedulerConfiguration
 leaderElection:
   leaderElect: false
 clientConnection:
-  kubeconfig: /Users/guoqi/.kube/config
+  kubeconfig: /root/.kube/config
 profiles:
-  - schedulerName: default-scheduler
+  - schedulerName: simple-scheduler
     plugins:
-      score:
+      preFilter:
         enabled:
-          - name: PodState
+          - name: SimplePlugin
+      filter:
+        enabled:
+          - name: SimplePlugin
+      preBind:
+        enabled:
+          - name: SimplePlugin
+      bind:
+        enabled:
+          - name: SimplePlugin
+        disabled:
+          - name: "*"
+      postBind:
+        enabled:
+          - name: SimplePlugin

@@ -6,7 +6,6 @@ require (
 	k8s.io/api v0.27.10
 	k8s.io/apimachinery v0.27.10
 	k8s.io/component-base v0.27.10
-	k8s.io/component-helpers v0.27.10
 	k8s.io/kubernetes v1.27.10
 )
 
@@ -101,6 +100,7 @@ require (
 	k8s.io/apiserver v0.27.10 // indirect
 	k8s.io/client-go v0.27.10 // indirect
 	k8s.io/cloud-provider v0.0.0 // indirect
+	k8s.io/component-helpers v0.27.10 // indirect
 	k8s.io/controller-manager v0.27.10 // indirect
 	k8s.io/csi-translation-lib v0.0.0 // indirect
 	k8s.io/dynamic-resource-allocation v0.0.0 // indirect

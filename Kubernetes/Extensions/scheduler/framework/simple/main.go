@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"simple/pkg/podstate"
+	"simple/pkg/simple"
 
 	"k8s.io/component-base/cli"
 	_ "k8s.io/component-base/metrics/prometheus/clientgo" // for rest client metric registration
@@ -12,7 +12,7 @@ import (
 
 func main() {
 	command := app.NewSchedulerCommand(
-		app.WithPlugin(podstate.Name, podstate.New),
+		app.WithPlugin(simple.Name, simple.New),
 	)
 
 	code := cli.Run(command)
