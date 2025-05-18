@@ -10,6 +10,7 @@ extenders:
   - urlPrefix: "http://localhost:8080"
     filterVerb: filter
     prioritizeVerb: prioritize
+    preemptVerb: preempt
     bindVerb: bind
     httpTimeout: 30s
     enableHttps: false

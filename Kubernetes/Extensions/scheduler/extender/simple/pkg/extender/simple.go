@@ -71,6 +71,21 @@ func (h *simpleHandler) Prioritize(ctx context.Context, args extenderapi.Extende
 	return &result, nil
 }
 
+// ProcessPreemption 抢占预处理
+func (h *simpleHandler) ProcessPreemption(ctx context.Context, args extenderapi.ExtenderPreemptionArgs) (*extenderapi.ExtenderPreemptionResult, error) {
+	log.Printf("[抢占处理] 开始处理抢占请求，候选节点数：%d", len(args.NodeNameToVictims))
+
+	for node, victims := range args.NodeNameToVictims {
+		log.Printf("[抢占处理] 节点 %s 有 %d 个被抢占 Pod：", node, len(victims.Pods))
+		for _, pod := range victims.Pods {
+			log.Printf("  - Pod: %s/%s", pod.Namespace, pod.Name)
+		}
+	}
+
+	log.Printf("[抢占处理] 未做变更")
+	return &extenderapi.ExtenderPreemptionResult{}, nil
+}
+
 // Bind 绑定操作
 func (h *simpleHandler) Bind(ctx context.Context, args extenderapi.ExtenderBindingArgs) (*extenderapi.ExtenderBindingResult, error) {
 	log.Printf("[绑定操作] 开始绑定 Pod %s/%s 到节点 %s\n", args.PodNamespace, args.PodName, args.Node)
