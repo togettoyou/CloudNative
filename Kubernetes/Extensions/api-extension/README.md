@@ -1,6 +1,6 @@
 # 扩展 Kubernetes API
 
-参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/
+参考：https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/
 
 扩展 Kubernetes API 实际就是创建定制资源（Custom Resources，CR）
 

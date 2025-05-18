@@ -1,6 +1,6 @@
 # API 聚合（API Aggregation，AA）
 
-参考：https://v1-27.docs.kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/
+参考：https://kubernetes.io/zh-cn/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/
 
 # Kubernetes API Server 必须通过 HTTPS 访问扩展 API 服务器（Extension API Server）
 
