@@ -48,7 +48,9 @@ func (ps *PodState) Score(ctx context.Context, state *framework.CycleState, pod 
 
 	// pe.score favors nodes with terminating pods instead of nominated pods
 	// It calculates the sum of the node's terminating pods and nominated pods
-	return ps.score(nodeInfo)
+	score, status := ps.score(nodeInfo)
+	fmt.Println("评分", score)
+	return score, status
 }
 
 // ScoreExtensions of the Score plugin.
