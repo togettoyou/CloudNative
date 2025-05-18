@@ -12,6 +12,7 @@ extenders:
     prioritizeVerb: prioritize
     preemptVerb: preempt
     # bindVerb: bind
+    enableHTTPS: false
     httpTimeout: 30s
     weight: 1
     nodeCacheCapable: false
