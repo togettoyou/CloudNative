@@ -11,9 +11,8 @@ extenders:
     filterVerb: filter
     prioritizeVerb: prioritize
     preemptVerb: preempt
-    bindVerb: bind
+    # bindVerb: bind
     httpTimeout: 30s
-    enableHttps: false
     weight: 1
     nodeCacheCapable: false
     managedResources: [ ]

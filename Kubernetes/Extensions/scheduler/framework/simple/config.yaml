@@ -6,13 +6,21 @@ clientConnection:
   kubeconfig: /root/.kube/config
 profiles:
   - schedulerName: simple-scheduler
-extenders:
-  - urlPrefix: "http://localhost:8080"
-    filterVerb: filter
-    prioritizeVerb: prioritize
-    bindVerb: bind
-    httpTimeout: 30s
-    enableHttps: false
-    weight: 1
-    nodeCacheCapable: false
-    managedResources: [ ]
+    plugins:
+      preFilter:
+        enabled:
+          - name: SimplePlugin
+      filter:
+        enabled:
+          - name: SimplePlugin
+      preBind:
+        enabled:
+          - name: SimplePlugin
+      bind:
+        enabled:
+          - name: SimplePlugin
+        disabled:
+          - name: "*"
+      postBind:
+        enabled:
+          - name: SimplePlugin
