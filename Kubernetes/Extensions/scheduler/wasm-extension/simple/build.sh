@@ -8,5 +8,5 @@ docker run --rm -it \
   tinygo/tinygo-dev:latest \
   /bin/sh -c '
     cd /project && \
-    tinygo build -o main.wasm -gc=custom -tags=custommalloc -scheduler=none --no-debug -target=wasi .
+    tinygo build -o main.wasm -target=wasi .
   '
