@@ -42,12 +42,6 @@ var (
 	_ api.PreFilterPlugin = &Simple{}
 )
 
-func (s *Simple) EventsToRegister() []api.ClusterEvent {
-	return []api.ClusterEvent{
-		{Resource: api.Pod, ActionType: api.Add},
-	}
-}
-
 func (s *Simple) PreFilter(state api.CycleState, pod proto.Pod) (nodeNames []string, status *api.Status) {
 	if _, ok := pod.GetLabels()["simple.io/required"]; !ok {
 		fmt.Printf("[PreFilter] Pod %s/%s 缺少必要的标签 simple.io/required，调度失败\n", pod.GetNamespace(), pod.GetName())
